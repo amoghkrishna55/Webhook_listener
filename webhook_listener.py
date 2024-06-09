@@ -6,6 +6,26 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import ngrok
 import time
 import webbrowser
+import requests
+import os
+
+def displayNotification(message,title=None,subtitle=None,soundname=None):
+	"""
+		Display an OSX notification with message title an subtitle
+		sounds are located in /System/Library/Sounds or ~/Library/Sounds
+	"""
+	titlePart = ''
+	if(not title is None):
+		titlePart = 'with title "{0}"'.format(title)
+	subtitlePart = ''
+	if(not subtitle is None):
+		subtitlePart = 'subtitle "{0}"'.format(subtitle)
+	soundnamePart = ''
+	if(not soundname is None):
+		soundnamePart = 'sound name "{0}"'.format(soundname)
+
+	appleScriptNotification = 'display notification "{0}" {1} {2} {3}'.format(message,titlePart,subtitlePart,soundnamePart)
+	os.system("osascript -e '{0}'".format(appleScriptNotification))
 
 def check_internet_connection():
     try:
@@ -26,9 +46,17 @@ class RequestHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         if b'"action":"lock"' in post_data:
-            # subprocess.run(['/usr/bin/pmset', 'displaysleepnow'])
-            webbrowser.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+            subprocess.run(['/usr/bin/pmset', 'displaysleepnow'])
+            # webbrowser.open('https://animesuge.to/home')
             self.server_ref.log("Executed lock command")
+        elif b'"action":"youtube"' in post_data:
+            webbrowser.open('https://www.youtube.com')
+            self.server_ref.log("Opened YouTube")
+        elif b'"action":"insult"' in post_data:
+            response = requests.get('https://insult.mattbas.org/api/insult')
+            insult = response.text
+            displayNotification(insult, title='Insult')
+            self.server_ref.log(f"Received insult: {insult}")
 
     def log_message(self, format, *args):
         self.server_ref.log("%s - - [%s] %s\n" % (self.address_string(), self.log_date_time_string(), format%args))

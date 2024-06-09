@@ -11,7 +11,7 @@ APP = ['webhook_listener.py']
 DATA_FILES = []
 OPTIONS = {
     'argv_emulation': False,
-    'packages': ['tkinter', 'subprocess', 'threading', 'ngrok'],
+    'packages': ['tkinter', 'subprocess', 'threading', 'ngrok', 'requests', 'chardet'],
     'includes': ['http.server'],
 }
 
