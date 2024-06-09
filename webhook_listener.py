@@ -5,6 +5,7 @@ import subprocess
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 import ngrok
 import time
+import webbrowser
 
 def check_internet_connection():
     try:
@@ -25,7 +26,8 @@ class RequestHandler(SimpleHTTPRequestHandler):
         self.send_response(200)
         self.end_headers()
         if b'"action":"lock"' in post_data:
-            subprocess.run(['/usr/bin/pmset', 'displaysleepnow'])
+            # subprocess.run(['/usr/bin/pmset', 'displaysleepnow'])
+            webbrowser.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
             self.server_ref.log("Executed lock command")
 
     def log_message(self, format, *args):
