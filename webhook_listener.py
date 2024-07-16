@@ -47,7 +47,6 @@ class RequestHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         if b'"action":"lock"' in post_data:
             subprocess.run(['/usr/bin/pmset', 'displaysleepnow'])
-            # webbrowser.open('https://animesuge.to/home')
             self.server_ref.log("Executed lock command")
         elif b'"action":"youtube"' in post_data:
             webbrowser.open('https://www.youtube.com')
